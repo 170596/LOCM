@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Labourers Of Christ Ministries - Dedicated to serving God and spreading His love through prayer and community service.">
+    <meta name="keywords" content="Christian Ministry, Prayer Request, Donation, Christ Love, India Ministry">
+    <meta property="og:title" content="Labourers Of Christ Ministries">
+    <meta property="og:description" content="Dedicated to serving God and spreading His love. Join us in our journey.">
+    <meta property="og:type" content="website">
+    <meta name="author" content="Labourers Of Christ Ministries">
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2980b9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <title>Labourers Of Christ Ministries</title>
+    
+    <!-- Google Fonts & Font Awesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box; /* यह सुनिश्चित करता है कि पैडिंग लेआउट को न तोड़े */
+        }
+        :root {
+            --primary: #2980b9;
+            --dark: #34495e;
+            --light: #f4f7f6;
+        }
+        img {
+            max-width: 100%; /* इमेज मोबाइल स्क्रीन से बाहर न जाए */
+            height: auto;
+            display: inline-block;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: var(--light);
+            margin: 0; padding: 0;
+            scroll-behavior: smooth;
+            overflow-x: hidden; /* मोबाइल पर साइड स्क्रॉलिंग रोकने के लिए */
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background: var(--dark);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .nav-logo { color: white; font-weight: 700; font-size: 1.2rem; text-decoration: none; display: flex; align-items: center; }
+        .nav-logo img { height: 40px; margin-right: 10px; border-radius: 5px; }
+        .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
+        .nav-links a { color: white; margin-left: 20px; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        
+        .menu-icon { display: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--dark);
+                padding: 20px 0;
+                text-align: center;
+                border-top: 1px solid rgba(255,255,255,0.1);
+            }
+            .nav-logo { font-size: 1rem; }
+            .nav-logo img { height: 35px; } /* मोबाइल पर लोगो थोड़ा छोटा */
+            .nav-links.active { display: flex; }
+            .nav-links a { margin: 10px 0; font-size: 1.1rem; }
+            .menu-icon { display: block; }
+        }
+        
+        .section { padding: 60px 20px; max-width: 1000px; margin: auto; }
+        .section:nth-child(even) { background-color: #f9f9f9; }
+        .section:nth-child(odd) { background-color: #ffffff; }
+        .container { padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 20px; }
+        h1 { color: #2c3e50; }
+        h2 { color: var(--primary); border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; font-weight: 600; }
+        p { color: #34495e; font-size: 1.1rem; line-height: 1.6; }
+        button { padding: 12px 25px; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 25px; font-weight: bold; transition: 0.3s; margin-top: 20px; outline: none; }
+        button:hover { background: var(--dark); transform: scale(1.05); }
+        #google_translate_element { padding: 10px; background: #eee; border-bottom: 1px solid #ddd; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .card img { width: 100%; border-radius: 10px; height: 200px; object-fit: cover; display: block; }
+        
+        /* UPI Button Styling Fix */
+        .upi-pay-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .upi-pay-btn:hover { background: #219150; transform: scale(1.05); color: white; }
+
+        .copy-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            border: none;
+        }
+        .copy-btn:hover { background: #c0392b; }
+
+        .gallery img { width: 100%; border-radius: 8px; transition: 0.3s; cursor: pointer; }
+        .gallery-item { 
+            position: relative; 
+            overflow: hidden; 
+            border-radius: 8px; 
+            background: #eee; 
+            min-height: 150px;
+            animation: fadeInUp 0.8s ease-out both;
+            transition: 0.3s;
+        }
+        .gallery-item:hover img { transform: scale(1.1) rotate(2deg); }
+        .gallery-item:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .gallery-caption { position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; padding: 5px; font-size: 0.8rem; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Video Section Styling */
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 20px; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; border-radius: 12px; }
+        .faq-item { text-align: left; background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--primary); word-wrap: break-word; }
+
+        /* Lightbox for Gallery */
+        .lightbox { display: none; position: fixed; z-index: 3000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 80%; border: 5px solid white; border-radius: 5px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .close-lightbox { position: absolute; top: 20px; right: 30px; color: white; font-size: 3rem; cursor: pointer; transition: 0.3s; }
+        .close-lightbox:hover { color: var(--primary); }
+
+        /* Slider Styling */
+        .slider-container { position: relative; max-width: 100%; margin: 20px auto; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .slides { display: flex; transition: transform 0.5s ease-in-out; }
+        .slide { min-width: 100%; position: relative; }
+        .slide img { width: 100%; height: 450px; object-fit: cover; cursor: pointer; }
+        .slide-caption { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 10px 25px; border-radius: 30px; font-size: 1rem; white-space: nowrap; }
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.3); color: white; border: none; padding: 15px; cursor: pointer; border-radius: 50%; font-size: 1.2rem; transition: 0.3s; z-index: 5; }
+        .slider-btn:hover { background: var(--primary); }
+        .prev-btn { left: 15px; }
+        .next-btn { right: 15px; }
+
+        .qr-code { max-width: 200px; margin: 20px auto; border: 5px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .terms-text { text-align: left; font-size: 0.9rem; color: #7f8c8d; line-height: 1.6; }
+        
+        footer { background: var(--dark); color: white; padding: 40px 20px; margin-top: 40px; border-top: 4px solid var(--primary); }
+        footer p { color: white !important; }
+        .social-links { margin-bottom: 25px; display: flex; justify-content: center; gap: 25px; }
+        .social-links a { color: white; font-size: 1.8rem; transition: 0.3s; }
+        .social-links a:hover { color: var(--primary); transform: translateY(-5px); }
+
+        @media screen and (max-width: 600px) {
+            .slide img { height: 250px; }
+            .slide-caption { font-size: 0.8rem; bottom: 15px; padding: 5px 15px; }
+        }
+        
+        /* Testimonials Styling */
+        .testimonial-card { font-style: italic; background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 3px solid var(--primary); position: relative; }
+        .testimonial-card::before { content: "\f10d"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 10px; left: 15px; color: #eee; font-size: 2rem; }
+        
+        .verse-container { position: relative; display: inline-block; width: 100%; }
+        .verse-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; font-style: italic; font-weight: 500; color: var(--dark); border-left: 5px solid var(--primary); }
+        .share-verse { cursor: pointer; color: #25d366; margin-top: 10px; display: inline-block; font-size: 1.2rem; text-decoration: none; }
+
+        /* AI Chat Widget Styling */
+        .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 2000; }
+        .chat-button { background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.3s; border: none; }
+        .chat-button:hover { transform: scale(1.1); }
+        .chat-window { display: none; position: absolute; bottom: 80px; right: 0; width: 300px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); overflow: hidden; flex-direction: column; text-align: left; }
+        .chat-window.active { display: flex; }
+        .chat-header { background: var(--primary); color: white; padding: 15px; font-weight: 600; display: flex; justify-content: space-between; }
+        .chat-messages { height: 250px; overflow-y: auto; padding: 15px; font-size: 0.9rem; background: #f9f9f9; }
+        .chat-input { display: flex; border-top: 1px solid #eee; }
+        .chat-input input { border: none; padding: 10px; flex: 1; outline: none; }
+        .chat-input button { margin: 0; border-radius: 0; padding: 10px 15px; font-size: 0.8rem; height: auto; }
+        .chat-options { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; background: #fff; border-top: 1px solid #eee; }
+        .opt-btn { background: #eee; color: var(--dark); padding: 5px 10px; border-radius: 15px; font-size: 0.75rem; cursor: pointer; transition: 0.3s; border: 1px solid #ddd; }
+        .opt-btn:hover { background: var(--primary); color: white; }
+
+        /* Back to Top Button Styling */
+        .back-to-top {
+            position: fixed;
+            bottom: 100px;
+            right: 35px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1500;
+            transition: 0.3s;
+        }
+        .back-to-top.show { display: flex; }
+        .back-to-top:hover { transform: translateY(-5px); background: var(--dark); }
+
+        /* Events Section Styling */
+        .event-card { background: #fff; border-left: 5px solid var(--primary); padding: 15px; margin-bottom: 15px; text-align: left; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .event-date { font-weight: bold; color: var(--primary); }
+
+        /* Map Styling */
+        .map-container { width: 100%; height: 300px; border-radius: 12px; overflow: hidden; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .map-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* Contact Form Styling */
+        .contact-form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; text-align: left; }
+        .contact-form input, .contact-form textarea { padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Poppins', sans-serif; width: 100%; box-sizing: border-box; font-size: 1rem; }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 5px rgba(41, 128, 185, 0.3); }
+
+        /* Journey Timeline Styling */
+        .journey-item {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+        .journey-item:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .journey-content h3 { color: var(--primary); margin-top: 0; font-size: 1.4rem; margin-bottom: 10px; }
+        .journey-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px 0; }
+        .vachan-text { font-style: italic; color: #555; margin-bottom: 15px; display: block; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#home" class="nav-logo">
+            <img src="images_logo.jpeg" alt="Logo">
+            LOC Ministries
+        </a>
+        <div class="menu-icon" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="#home" onclick="toggleMenu()">Home</a>
+            <a href="#journey" onclick="toggleMenu()">Journey</a>
+            <a href="#events" onclick="toggleMenu()">Events</a>
+            <a href="#videos" onclick="toggleMenu()">Videos</a>
+            <a href="#mission" onclick="toggleMenu()">Mission</a>
+            <a href="#leaders" onclick="toggleMenu()">Founder</a>
+            <a href="#gallery" onclick="toggleMenu()">Gallery</a>
+            <a href="#donation" onclick="toggleMenu()">Donation</a>
+            <a href="#contact" onclick="toggleMenu()">Contact</a>
+        </div>
+    </nav>
+
+    <div id="google_translate_element"></div> <!-- भाषा बदलने का विकल्प यहाँ दिखेगा -->
+
+    <div id="home" class="section">
+        <div class="container">
+            <h1>Labourers Of Christ Ministries</h1>
+            <p id="message">परमेश्वर की सेवा और उनके प्रेम को सभी तक पहुँचाने के लिए समर्पित।</p>
+            <div class="verse-container">
+                <div class="verse-box" id="dailyVerse">"परमेश्वर प्रेम है।" - 1 यूहन्ना 4:8</div>
+                <a class="share-verse" onclick="shareVerse()" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp पर शेयर करें</a>
+            </div>
+            <button onclick="changeText()">आशीर्वाद प्राप्त करें</button>
+        </div>
+    </div>
+
+    <div id="journey" class="section">
+        <h2>हमारी यात्रा (Our Journey)</h2>
+        <div class="journey-grid">
+            <!-- 2012 Milestone -->
+            <div class="journey-item">
+                <div class="journey-content">
+                    <h3>2012: शुरुआत (The Beginning)</h3>
+                    <span class="vachan-text">"तेरा आरम्भ चाहे छोटा रहा हो, परन्तु तेरा अन्त बहुत महान होगा।" - अय्यूब 8:7</span>
+                    <p>एक छोटे से विश्वास और प्रार्थना के साथ हमने मसीह की सेवा का यह सफर शुरू किया।</p>
+                </div>
+            </div>
+            <!-- 2020 Milestone -->
+            <div class="journey-item">
+                <div class="journey-content">
+                    <h3>2020: सेवा का विस्तार (Expansion)</h3>
+                    <span class="vachan-text">"परमेश्वर का वचन बढ़ता और फैलता गया।" - प्रेरितों के काम 12:24</span>
+                    <p>कठिन समय में भी प्रभु ने हमारे हाथों को मजबूत किया ताकि हम अधिक लोगों तक पहुँच सकें।</p>
+                </div>
+            </div>
+            <!-- 2025 / Today Milestone -->
+            <div class="journey-item">
+                <div class="journey-content">
+                    <h3>आज और भविष्य (Today & 2025 Vision)</h3>
+                    <span class="vachan-text">"मैं उस लक्ष्य की ओर दौड़ा चला जाता हूँ।" - फिलिप्पियों 3:14</span>
+                    <p>हमारा लक्ष्य हर आत्मा तक सुसमाचार पहुँचाना और प्रभु की महिमा के लिए बढ़ते जाना है।</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="events" class="section">
+        <h2>आगामी कार्यक्रम (Upcoming Events)</h2>
+        <div class="container">
+            <div class="event-card">
+                <img src="images_weekly_worship.jpeg" alt="Worship" style="width:100%; border-radius:10px; margin-bottom:10px; height:200px; object-fit:cover;" loading="lazy">
+                <div class="event-date">प्रत्येक रविवार - सुबह 10:00 बजे</div>
+                <strong>साप्ताहिक प्रार्थना सभा (Weekly Worship)</strong>
+                <p>मसीह के प्रेम और वचनों को साझा करने के लिए हमारे साथ जुड़ें।</p>
+            </div>
+            <div class="event-card">
+                <img src="images_special_service.jpeg" alt="Special Service" style="width:100%; border-radius:10px; margin-bottom:10px; height:200px; object-fit:cover;" loading="lazy">
+                <div class="event-date">15 अगस्त 2024</div>
+                <strong>स्वतंत्रता दिवस विशेष सेवा (Special Service)</strong>
+                <p>राष्ट्र की शांति और समृद्धि के लिए विशेष प्रार्थना।</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="videos" class="section">
+        <h2>विशेष संदेश (Video Messages)</h2>
+        <div class="container">
+            <p>परमेश्वर के वचनों को गहराई से समझने के लिए हमारे वीडियो देखें।</p>
+            <div class="video-wrapper">
+                <!-- YouTube Video -->
+                <iframe src="https://www.youtube.com/embed/tKshnMEgnKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            
+            <!-- गैलरी (लोकल स्टोरेज) से वीडियो -->
+            <div class="video-wrapper" style="background:#000;">
+                <video id="mainVideo" controls playsinline poster="images_logo.jpeg">
+                    <source src="my_gallery_video.mp4" type="video/mp4">
+                    आपका ब्राउज़र वीडियो टैग का समर्थन नहीं करता है।
+                </video>
+            </div>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">ऊपर वाला वीडियो आपकी गैलरी से है। नीचे YouTube चैनल देखें:</p>
+            <a href="https://www.youtube.com/@labourersofchristministries" target="_blank" rel="noopener noreferrer" style="text-decoration: none;"><button style="background: #ff0000; margin-top: 5px;"><i class="fab fa-youtube"></i> चैनल को सब्सक्राइब करें</button></a>
+        </div>
+    </div>
+
+    <div id="mission" class="section">
+        <h2>हमारा लक्ष्य (Our Mission)</h2>
+        <p>हमारा मिशन सुसमाचार का प्रचार करना, जरूरतमंदों की सेवा करना और मसीह के प्रेम के माध्यम से जीवन को बदलना है।</p>
+    </div>
+
+    <div id="leaders" class="section">
+        <h2>हमारे मार्गदर्शक (Our Leaders)</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="images_praveen_barela.jpeg" alt="Praveen J. Barela" loading="lazy">
+                <h3>Praveen J. Barela</h3>
+                <p>मुख्य संस्थापक और आध्यात्मिक मार्गदर्शक।</p>
+            </div>
+            <div class="card">
+                <img src="images_mandakini_barela.jpeg" alt="Mandakini P. Barela" loading="lazy">
+                <h3>Mandakini P. Barela</h3>
+                <p>मिनिस्ट्री समन्वयक और सेवा प्रमुख।</p>
+            </div>
+            <div class="card">
+                <img src="images_anil_bhadle.jpeg" alt="Anil S. Bhadle" loading="lazy">
+                <h3>Anil S. Bhadle</h3>
+                <p>सदस्य।</p>
+            </div>
+            <div class="card">
+                <img src="images_vikas_sule.jpeg" alt="Vikas K. Sule" loading="lazy">
+                <h3>Vikas K. Sule</h3>
+                <p>सदस्य।</p>
+            </div>
+            <div class="card">
+                <img src="images_mukesh_pawara.jpeg" alt="Mukesh S. Pawara" loading="lazy">
+                <h3>Mukesh S. Pawara</h3>
+                <p>सदस्य।</p>
+            </div>
+            <div class="card">
+                <img src="images_shivdas_pawara.jpeg" alt="Shivdas D. Pawara" loading="lazy">
+                <h3>Shivdas D. Pawara</h3>
+                <p>सदस्य।</p>
+             </div>
+        </div>
+    </div>
+
+    <div id="gallery" class="section">
+        <h2>गैलरी और विशेष पल (Gallery & Special Moments)</h2>
+        
+        <!-- Photo Slider -->
+        <div class="slider-container">
+            <div class="slides" id="imageSlides">
+                <div class="slide"><img src="images_service1.jpeg" onclick="openLightbox(this.src)" alt="अभिषेक समारोह"><div class="slide-caption">अभिषेक का पावन समय</div></div>
+                <div class="slide"><img src="images_service2.jpeg" onclick="openLightbox(this.src)" alt="पा. जोनी लीवर के साथ"><div class="slide-caption">पा. जोनी लीवर जी के साथ यादगार पल</div></div>
+                <div class="slide"><img src="images_service3.jpeg" onclick="openLightbox(this.src)" alt="अनील और सुनीता की शादी"><div class="slide-caption">अनील एवं सुनीता का विवाह समारोह</div></div>
+                <div class="slide"><img src="images_service4.jpeg" onclick="openLightbox(this.src)" alt="मुकेश और रानी की शादी"><div class="slide-caption">मुकेश एवं रानी का शुभ विवाह</div></div>
+                <div class="slide"><img src="images_service5.jpeg" onclick="openLightbox(this.src)" alt="शिरपुर भव्य कन्वेंशन"><div class="slide-caption">शिरपुर भव्य कन्वेंशन (2025)</div></div>
+            </div>
+            <button class="slider-btn prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+            <button class="slider-btn next-btn" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+
+        <div class="grid gallery" id="galleryGrid">
+            <!-- Line 412 starts here -->
+            <div class="gallery-item">
+                <img src="images_service1.jpeg" alt="Service 1" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">अभिषेक का समय</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_service2.jpeg" alt="Service 2" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">पा. जोनी लीवर से भेंट</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_service3.jpeg" alt="Service 3" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">अनील & सुनीता कि शादी</div>
+            </div>
+            <!-- इसी तरह अन्य फोटो जोड़ें -->
+            <div class="gallery-item">
+                <img src="images_service4.jpeg" alt="Gallery 4" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">मुकेश & रानी कि शादी</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_service5.jpeg" alt="Gallery 5" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">शिरपुर कन्वेंशन</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_service6.jpeg" alt="Gallery 6" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">शिरपुर कन्वेंशन</div>
+            </div>
+            <!-- 'विशेष क्षण' (Memories) की फोटो यहाँ जोड़ी गई हैं -->
+            <div class="gallery-item">
+                <img src="images_2005.jpeg" alt="मसीही सेवा की शुरुआत 2005" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">प्रथम चरण: नींव की स्थापना (2005)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2015.jpeg" alt="धुले कन्वेंशन 2015" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">धुले आत्मिक जागृति सभा (2015)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2016.jpeg" alt="मुंबई मीटिंग 2016" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">मुंबई सुसमाचार प्रचार (2016)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2017.jpeg" alt="शिरपुर प्रार्थना उत्सव (2017)" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">शिरपुर प्रार्थना उत्सव (2017)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2018.jpeg" alt="भागपुर मीटिंग 2018" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">भागपुर जागृति सभा (2018)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2019.jpeg" alt="भुसावल कन्वेंशन 2019" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">भुसावल आत्मिक संगति (2019)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2020.jpeg" alt="मालकातर मीटिंग 2020" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">मालकातर सुसमाचार प्रचार (2020)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2021.jpeg" alt="काली आंबा मीटिंग 2021" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">काली आंबा आराधना उत्सव (2021)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2022.jpeg" alt="जोयदा मीटिंग 2022" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">जोयदा सुसमाचार सभा (2022)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2023.jpeg" alt="वरला क्रिसमस 2023" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">वरला क्रिसमस महोत्सव (2023)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2024.jpeg" alt="काली आंबा क्रिसमस 2024" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">काली आंबा बड़ा दिन मिलन (2024)</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images_2025.jpeg" alt="शिरपुर कन्वेंशन 2025" loading="lazy" onclick="openLightbox(this.src)">
+                <div class="gallery-caption">शिरपुर भव्य कन्वेंशन (2025)</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="faq" class="section">
+        <h2>अक्सर पूछे जाने वाले सवाल (FAQ)</h2>
+        <div class="container">
+            <div class="faq-item">
+                <strong>Q: क्या मैं अपनी प्रार्थना का अनुरोध भेज सकता हूँ?</strong>
+                <p>A: हाँ, आप हमारे 'Contact' फॉर्म के माध्यम से या सीधे व्हाट्सएप पर प्रार्थना अनुरोध भेज सकते हैं।</p>
+            </div>
+            <div class="faq-item">
+                <strong>Q: रविवार की सभा किस भाषा में होती है?</strong>
+                <p>A: हमारी सभाएँ मुख्य रूप से हिंदी और स्थानीय भाषा में होती हैं।</p>
+            </div>
+            <div class="faq-item">
+                <strong>Q: क्या मैं इस मंत्रालय में वालंटियर बन सकता हूँ?</strong>
+                <p>A: जी हाँ, हम हमेशा सेवा के लिए तैयार हाथों का स्वागत करते हैं। कृपया हमसे संपर्क करें।</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox">&times;</span>
+        <img id="lightboxImg" src="" alt="Zoomed Image">
+    </div>
+
+    <!-- AI Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-button" onclick="toggleChat()" aria-label="Open Chat"><i class="fas fa-robot"></i></button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">LOC Assistant <span onclick="toggleChat()" style="cursor:pointer;">&times;</span></div>
+            <div class="chat-messages" id="chatMessages">
+                <p><strong>LOC Bot:</strong> नमस्ते! मैं आपकी कैसे मदद कर सकता हूँ?</p>
+            </div>
+            <div class="chat-options">
+                <div class="opt-btn" onclick="quickReply('प्रार्थना अनुरोध')">प्रार्थना</div>
+                <div class="opt-btn" onclick="quickReply('दान की जानकारी')">दान</div>
+                <div class="opt-btn" onclick="quickReply('सभा का समय')">सभा का समय</div>
+                <div class="opt-btn" onclick="quickReply('आज का वचन')">आज का वचन</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="सवाल पूछें (उदा: दान, प्रार्थना)...">
+                <button onclick="sendMessage()">भेजें</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="donation" class="section">
+        <h2>ऑनलाइन दान (Online Donation)</h2>
+        <div class="container">
+            <p>आपके द्वारा दिया गया दान हमारे मिनिस्ट्री के कार्यों को सुचारू रूप से चलाने में मदद करता है। आप नीचे दिए गए QR कोड को स्कैन करके या सीधे UPI बटन दबाकर दान दे सकते हैं।</p>
+            
+            <!-- पक्का करें कि फाइल का नाम qr_code.jpeg ही है -->
+            <img src="images_qr_code.jpeg" alt="Donation QR Code" class="qr-code" style="cursor: pointer; border: 2px solid #eee; padding: 10px;" onclick="openLightbox(this.src)">
+            <p><strong>Scan QR Code to Donate</strong></p>
+
+            <!-- पेमेंट बटन (Added cu=INR for better validation) -->
+            <a href="upi://pay?pa=50200076072647@hdfcbank&pn=LOC%20Ministries&cu=INR" class="upi-pay-btn">
+                <i class="fas fa-mobile-alt"></i> सीधे UPI से भुगतान करें
+            </a>
+
+            <div style="margin-top: 15px;">
+                <p style="font-size: 0.9rem; margin-bottom: 5px;">यदि बटन काम न करे, तो ID कॉपी करें:</p>
+                <button class="copy-btn" onclick="copyUPI()">50200076072647@hdfcbank <i class="fas fa-copy"></i></button>
+            </div>
+
+            <div id="bankDetails" style="margin-top: 20px; font-size: 1rem;">
+                <p>बैंक खाता विवरण: <strong>Labourers Of Christ Charitrust</strong></p>
+                <p>Registration/License No: <strong>E-1599/Jalgaon</strong></p>
+                <p>IFSC Code: <strong id="ministryIfsc">HDFC0001785</strong> | A/C No: <strong id="ministryAccount">50200076072647</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact" class="section">
+        <h2>संपर्क करें (Contact Us)</h2>
+        <div class="container">
+            <div id="prayer-section" style="margin-bottom: 30px;">
+                <p>📧 <strong>Email:</strong> <span id="ministryEmail">anupawara316@gmail.com</span></p>
+                <p>📍 <strong>Address:</strong> <span id="ministryAddress">Rohidas Pratisthan Hall, Wagh Nagar, Jalgaon</span></p>
+                <p>📞 <strong>Phone:</strong> <span id="ministryPhone">+91 9370784392</span></p>
+            </div>
+
+            <div class="map-container">
+                <!-- Google Maps Embed Link को सक्रिय किया गया -->
+                <iframe src="https://maps.google.com/maps?q=Rohidas%20Pratisthan%20Hall,%20Wagh%20Nagar,%20Jalgaon&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            
+            <!-- Email के लिए Formspree का उपयोग (YOUR_ID की जगह अपनी Formspree ID डालें) -->
+            <form action="https://formspree.io/f/mzdydgrz" method="POST" class="contact-form" id="prayerForm">
+                <input type="text" name="name" placeholder="आपका नाम" required>
+                <input type="text" name="address" placeholder="आपका पता (Address)" required>
+                <input type="tel" name="phone" placeholder="आपका फोन नंबर" required>
+                <input type="email" name="email" placeholder="आपका ईमेल" required>
+                <input type="text" name="state" placeholder="राज्य (State)" required>
+                <input type="text" name="pincode" placeholder="पिन कोड (Pin Code)" required>
+                <textarea name="request" rows="5" placeholder="आपकी प्रार्थना या अनुरोध (Request)" required></textarea>
+                <button type="submit">संदेश भेजें</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="terms" class="section">
+        <h2>नियम और शर्तें (Terms & Conditions)</h2>
+        <div class="container terms-text">
+            <p>1. दान स्वेच्छा से दिया गया माना जाएगा और यह वापस (refund) नहीं किया जा सकता।</p>
+            <p>2. आपके द्वारा साझा की गई जानकारी का उपयोग केवल मिनिस्ट्री के रिकॉर्ड के लिए किया जाएगा।</p>
+            <p>3. हम पारदर्शिता में विश्वास रखते हैं और आपके दान का उपयोग केवल सेवा कार्यों के लिए करते हैं।</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://facebook.com/share/18SGKJ6LdG/" target="_blank" rel="noopener noreferrer" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://instagram.com/anu.bhadle?igsh=M3Bhb3J6eTRicmFj" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/@labourersofchristministries?si=xiwUQUxE5-DWYWNX" target="_blank" rel="noopener noreferrer" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/919370784392" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <img src="images_logo.jpeg" alt="Logo" style="height: 60px; margin-bottom: 15px; border-radius: 10px;">
+        <p>&copy; 2020 - 2024 <strong>Labourers Of Christ Ministries</strong>. All Rights Reserved.</p>
+        <p style="font-size: 0.9rem; margin-top: 5px;">Regd. No: E-1599/Jalgaon</p>
+        <p style="font-size: 0.9rem;">Serving humanity with faith and love.</p>
+    </footer>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'hi',
+                includedLanguages: 'hi,en,te,ta,bn,gu,kn,ml,mr,pa,or,ur', // भारत की प्रमुख भाषाएँ
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+        // Navigation Menu Toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Change Blessing Text
+        function changeText() {
+            const blessings = [
+                "परमेश्वर आपको और आपके परिवार को बहुतायत से आशीष दे!",
+                "प्रभु की शांति आपके साथ हमेशा बनी रहे।",
+                "यहोवा आपके मार्ग को सफल करे और आपकी रक्षा करे।",
+                "मसीह का प्रेम आपके हृदय में वास करे।",
+                "परमेश्वर का अनुग्रह आप पर बना रहे।"
+            ];
+            const randomIndex = Math.floor(Math.random() * blessings.length);
+            const messageEl = document.getElementById('message');
+            if (messageEl) messageEl.innerText = blessings[randomIndex];
+        }
+
+        // Daily Bible Verse Logic
+        const verses = [
+            '"यहोवा मेरा चरवाहा है, मुझे कुछ घटी न होगी।" - भजन संहिता 23:1',
+            '"परमेश्वर हमारा शरणस्थान और बल है।" - भजन संहिता 46:1',
+            '"मैं तुम्हारे लिये जो कल्पनाएं करता हूं, उन्हें मैं जानता हूं।" - यिर्मयाह 29:11',
+            '"विश्वास ही वह चीज है जो हमें अनदेखी चीजों का प्रमाण देती है।" - इब्रानियों 11:1',
+            '"परमेश्वर प्रेम है।" - 1 यूहन्ना 4:8',
+            '"यहोवा तुझे आशीष दे और तेरी रक्षा करे।" - गिनती 6:24',
+            '"मत डर, क्योंकि मैं तेरे साथ हूं।" - यशायाह 41:10',
+            '"तेरा वचन मेरे पांव के लिये दीपक और मेरे मार्ग के लिये उजियाला है।" - भजन संहिता 119:105',
+            '"जो मुझ में बना रहता है, वह बहुत फल फलता है।" - यूहन्ना 15:5',
+            '"प्रभु का आनन्द तुम्हारा दृढ़ गढ़ है।" - नहेमायाह 8:10',
+            '"यीशु मसीह कल और आज और युगानुयुग एक सा है।" - इब्रानियों 13:8',
+            '"जो यहोवा की बाट जोहते हैं, वे नया बल प्राप्त करते जाएंगे।" - यशायाह 40:31',
+            '"यहोवा का नाम एक दृढ़ गढ़ है; धर्मी उस में भाग कर कुशल से रहता है।" - नीतिवचन 18:10',
+            '"तेरा प्रकाश आया है; उठ, प्रकाशमान हो।" - यशायाह 60:1',
+            '"सब कुछ जो तुम करते हो, प्रेम से करो।" - 1 कुरिन्थियों 16:14',
+            '"क्योंकि परमेश्वर ने हमें भय की नहीं पर सामर्थ, और प्रेम, और संयम की आत्मा दी है।" - 2 तीमुथियुस 1:7',
+            '"यहोवा का भय मानना बुद्धि का आरम्भ है।" - भजन संहिता 111:10',
+            '"प्रभु मेरा सहायक है, मैं न डरूंगा।" - इब्रानियों 13:6',
+            '"परमेश्वर मेरे साथ है, मुझे क्या डर?" - भजन संहिता 118:6',
+            '"यहोवा ही मेरी ज्योति और मेरा उद्धार है।" - भजन संहिता 27:1',
+            '"जो प्रभु पर भरोसा रखते हैं, वे कभी लज्जित न होंगे।" - रोमियों 10:11',
+            '"यहोवा मेरा बल और मेरी ढाल है।" - भजन संहिता 28:7',
+            '"परमेश्वर का अनुग्रह तुम पर बना रहे।" - 2 कुरिन्थियों 13:14',
+            '"यहोवा ही मेरा भाग है, इसलिये मैं उस में आशा रखूंगा।" - विलापगीत 3:24',
+            '"प्रभु का धन्यवाद करो क्योंकि वह भला है।" - भजन संहिता 136:1'
+        ];
+
+        // Auto-save Form Data Logic
+        const prayerFormElement = document.getElementById('prayerForm');
+        const formFields = prayerFormElement.querySelectorAll('input, textarea');
+
+        // Load saved data from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            formFields.forEach(field => {
+                const savedValue = localStorage.getItem('prayerForm_' + field.name);
+                if (savedValue) field.value = savedValue;
+            });
+        });
+
+        // AI Chat Logic
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('active');
+        }
+
+        // Lightbox Functions
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            img.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function shareVerse() {
+            const verse = document.getElementById('dailyVerse').innerText;
+            const text = encodeURIComponent(`*आज का वचन:* \n\n${verse}\n\nदेखें: ${window.location.href}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        // Copy UPI ID function
+        function copyUPI() {
+            const upiId = "50200076072647@hdfcbank";
+            navigator.clipboard.writeText(upiId).then(() => {
+                alert("UPI ID कॉपी हो गई है: " + upiId);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        }
+
+        // Back to Top Button Logic
+        const backToTopBtn = document.getElementById('backToTop');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function quickReply(text) {
+            document.getElementById('userInput').value = text;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const messages = document.getElementById('chatMessages');
+            const userText = input.value.trim().toLowerCase();
+            if (userText === "") return;
+
+            messages.innerHTML += `<p style="text-align:right;"><strong>You:</strong> ${input.value}</p>`;
+            input.value = "";
+
+            // Auto-fetch data from the website content
+            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).innerText : "उपलब्ध नहीं";
+            const siteData = {
+                address: getVal('ministryAddress'),
+                phone: getVal('ministryPhone'),
+                email: getVal('ministryEmail'),
+                bank: getVal('bankDetails'),
+                leaders: Array.from(document.querySelectorAll('#leaders .card h3')).map(h => h.innerText).join(", ") || "Our Leaders",
+                events: Array.from(document.querySelectorAll('.event-card strong')).map(e => e.innerText).join(" और ") || "Worship Services"
+            };
+
+            let response = "क्षमा करें, इस बारे में अधिक जानकारी के लिए आप हमें " + siteData.phone + " पर संपर्क कर सकते हैं।";
+
+            // Greeting logic
+            if (userText.includes("hi") || userText.includes("hello") || userText.includes("नमस्ते") || userText.includes("hey")) {
+                response = "नमस्ते! मैं 'Labourers Of Christ' का डिजिटल सहायक हूँ। मैं आपकी प्रार्थना अनुरोध, दान या मिनिस्ट्री की जानकारी में मदद कर सकता हूँ। आप क्या जानना चाहेंगे?";
+            } else if (userText.includes("दान") || userText.includes("donation")) {
+                response = "आप बैंक या UPI के माध्यम से दान दे सकते हैं। विवरण इस प्रकार है: " + siteData.bank;
+            } else if (userText.includes("प्रार्थना") || userText.includes("prayer")) {
+                response = "हम आपके लिए प्रार्थना करना चाहेंगे। कृपया नीचे दिए गए 'Contact' फॉर्म को भरें या हमें " + siteData.phone + " पर कॉल करें।";
+            } else if (userText.includes("मिशन") || userText.includes("mission")) {
+                response = "हमारा मिशन सुसमाचार का प्रचार करना और जरूरतमंदों की सेवा करना है।";
+            } else if (userText.includes("पता") || userText.includes("address") || userText.includes("location") || userText.includes("कहाँ")) {
+                response = "हमारा पता है: " + siteData.address;
+            } else if (userText.includes("वचन") || userText.includes("verse") || userText.includes("bible")) {
+                response = "आज का मुख्य वचन है: " + document.getElementById('dailyVerse').innerText + ". परमेश्वर आपको आशीष दे।";
+            } else if (userText.includes("समय") || userText.includes("time") || userText.includes("कब") || userText.includes("sunday")) {
+                response = "हमारी मुख्य सभाएं: " + siteData.events;
+            } else if (userText.includes("नंबर") || userText.includes("phone") || userText.includes("संपर्क") || userText.includes("contact")) {
+                response = "आप हमें " + siteData.phone + " पर कॉल कर सकते हैं या " + siteData.email + " पर ईमेल कर सकते हैं।";
+            } else if (userText.includes("लीडर") || userText.includes("founder") || userText.includes("मार्गदर्शक") || userText.includes("नाम")) {
+                response = "हमारे मुख्य मार्गदर्शक " + siteData.leaders + " हैं।";
+            } else if (userText.includes("social") || userText.includes("facebook") || userText.includes("youtube") || userText.includes("instagram")) {
+                response = "आप हमें Facebook, Instagram और YouTube पर फॉलो कर सकते हैं। लिंक पेज के नीचे (Footer) दिए गए हैं।";
+            } else if (userText.includes("वीडियो") || userText.includes("video") || userText.includes("youtube")) {
+                response = "आप हमारे विशेष संदेश 'Videos' सेक्शन में देख सकते हैं।";
+            } else if (userText.includes("सवाल") || userText.includes("faq") || userText.includes("volunteer")) {
+                response = "आप हमारे FAQ सेक्शन में सामान्य सवालों के जवाब देख सकते हैं या वालंटियर बनने के लिए हमसे संपर्क कर सकते हैं।";
+            } else if (userText.includes("धन्यवाद") || userText.includes("thanks") || userText.includes("shukriya")) {
+                response = "आपका स्वागत है! ईश्वर आपको आशीष दे। क्या मैं आपकी कुछ और मदद कर सकता हूँ?";
+            } else if (userText.includes("काम") || userText.includes("work") || userText.includes("सेवा")) {
+                response = "हम प्रार्थना सभाओं, भोजन वितरण और शिक्षा के माध्यम से समाज की सेवा करते हैं। अधिक जानकारी के लिए 'Journey' सेक्शन देखें।";
+            }
+
+            setTimeout(() => {
+                messages.innerHTML += `<p><strong>LOC Bot:</strong> ${response}</p>`;
+                messages.scrollTop = messages.scrollHeight;
+            }, 500);
+        }
+
+        // Initialization logic
+        function init() {
+            // Set Verse
+            const randomIndex = Math.floor(Math.random() * verses.length);
+            const dailyVerseEl = document.getElementById('dailyVerse');
+            if (dailyVerseEl) dailyVerseEl.innerText = verses[randomIndex];
+            
+            // Start Slider
+            if (typeof showSlides === 'function') showSlides();
+
+            // Register PWA Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log('✅ App (Service Worker) Registered'))
+                    .catch(err => console.log('❌ App Registration Failed', err));
+            }
+        }
+
+        // WhatsApp and Form Submission Logic (Restored)
+        prayerFormElement.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const phone = formData.get('phone');
+            const request = formData.get('request');
+
+            // WhatsApp Message
+            const whatsappMessage = encodeURIComponent(`*New Prayer Request*\nName: ${name}\nPhone: ${phone}\nRequest: ${request}`);
+            window.open(`https://wa.me/919370784392?text=${whatsappMessage}`, '_blank');
+
+            // Email submission
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    alert('धन्यवाद! आपका अनुरोध भेज दिया गया है।');
+                    this.reset();
+                    localStorage.clear();
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Basic error handling for media
+            document.querySelectorAll('img, video, source').forEach(item => {
+                item.onerror = function() {
+                    let src = this.src || this.poster || this.getAttribute('src');
+                    console.error("❌ फ़ाइल नहीं मिली: " + src);
+                    
+                    if (this.tagName === 'IMG' && src && !src.includes('images_logo.jpeg')) {
+                        this.src = 'images_logo.jpeg';
+                    }
+                    
+                    // वीडियो सोर्स के लिए फिक्स (Video Source Fix)
+                    if (this.tagName === 'SOURCE') {
+                        const video = this.parentElement;
+                        console.warn("⚠️ वीडियो सोर्स लोड करने में विफल: " + src);
+                        // वीडियो को रीलोड करने का प्रयास करें यदि अन्य सोर्स मौजूद हों
+                        video.load();
+                    }
+                };
+            });
+        });
+
+        window.addEventListener('load', init);
+
+        // Slider Logic
+        let slideIndex = 0; // स्लाइडर के लिए इंडेक्स
+        function showSlides() { // स्लाइडर को दिखाने का फंक्शन
+            const slidesContainer = document.getElementById('imageSlides'); // स्लाइडर कंटेनर
+            const totalSlides = document.querySelectorAll('.slide').length; // कुल स्लाइडों की संख्या
+            if (slideIndex >= totalSlides) slideIndex = 0; // अगर आखिरी स्लाइड पर हैं, तो पहली पर वापस जाएं
+            if (slideIndex < 0) slideIndex = totalSlides - 1; // अगर पहली स्लाइड से पीछे गए, तो आखिरी पर जाएं
+            slidesContainer.style.transform = `translateX(${-slideIndex * 100}%)`; // स्लाइड को खिसकाएं
+        }
+
+        // स्लाइड को आगे या पीछे ले जाने का फंक्शन
+        function moveSlide(n) {
+            slideIndex += n;
+            showSlides();
+        }
+
+        // Auto Slide every 5 seconds
+        setInterval(() => {
+            slideIndex++;
+            showSlides();
+        }, 5000);
+    </script>
+</body>
+</html>
