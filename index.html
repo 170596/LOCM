@@ -281,6 +281,7 @@
             <a href="#gallery" onclick="toggleMenu()">Gallery</a>
             <a href="#donation" onclick="toggleMenu()">Donation</a>
             <a href="#contact" onclick="toggleMenu()">Contact</a>
+            <a href="javascript:void(0)" id="installApp" style="display:none; color: #f1c40f; font-weight: bold;" onclick="installPWA()">Install App</a>
         </div>
     </nav>
 
@@ -831,6 +832,30 @@
                 navigator.serviceWorker.register('sw.js')
                     .then(() => console.log('✅ App (Service Worker) Registered'))
                     .catch(err => console.log('❌ App Registration Failed', err));
+            }
+        }
+
+        // PWA Install Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // ब्राउज़र के डिफ़ॉल्ट प्रॉम्प्ट को रोकें
+            e.preventDefault();
+            deferredPrompt = e;
+            // हमारा कस्टम 'Install App' बटन दिखाएं
+            const installBtn = document.getElementById('installApp');
+            if (installBtn) installBtn.style.display = 'block';
+        });
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installApp').style.display = 'none';
+                });
             }
         }
 

@@ -2,7 +2,7 @@
     "name": "Labourers Of Christ Ministries",
     "short_name": "LOC Ministries",
     "description": "Dedicated to serving God and spreading His love.",
-    "start_url": "index.html",
+    "start_url": "./",
     "display": "standalone",
     "background_color": "#f4f7f6",
     "theme_color": "#2980b9",
