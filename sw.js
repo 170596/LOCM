@@ -9,7 +9,7 @@ const urlsToCache = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
-// Install: फाइलों को कैशे में सेव करना
+// Install: Cache files
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
@@ -18,7 +18,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate: पुराने कैशे को हटाना (जब आप v1 से v2 करेंगे)
+// Activate: Clean up old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -30,12 +30,15 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
-  );
+    }).then(() => self.clients.claim())
+  )
 });
 
 // Fetch: इंटरनेट न होने पर कैशे से फाइल देना
+// Fetch: Serve from cache, fallback to network
 self.addEventListener('fetch', event => {
+  // Skip cross-origin requests like Google Fonts if needed, 
+  // or handle them specifically. Here we try cache first.
   event.respondWith(
     caches.match(event.request)
       .then(response => {
@@ -44,7 +47,10 @@ self.addEventListener('fetch', event => {
       })
       .catch(() => {
         // अगर नेटवर्क फेल हो जाए और फाइल कैशे में न हो, तो कम से कम index.html दिखाएं
-        return caches.match('./index.html');
+        // Fallback to index.html for navigation requests
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
       })
   );
 });
