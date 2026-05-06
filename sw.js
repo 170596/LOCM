@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loc-ministries-v8'; // अपडेटेड वर्शन
+const CACHE_NAME = 'loc-ministries-v10'; // नया वर्शन
 const urlsToCache = [
   './',
   './index.html',

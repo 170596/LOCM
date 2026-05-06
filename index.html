@@ -63,6 +63,24 @@
         .nav-logo img { height: 40px; margin-right: 10px; border-radius: 5px; }
         .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
         .nav-links a { color: white; margin-left: 20px; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        
+        /* Settings Icon Style */
+        .settings-icon { color: white; font-size: 1.2rem; cursor: pointer; margin-left: 15px; transition: 0.3s; }
+        .settings-icon:hover { color: var(--primary); }
+        
+        /* Settings Modal */
+        .settings-modal { display: none; position: fixed; top: 70px; right: 20px; background: white; width: 280px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 2000; padding: 20px; flex-direction: column; border: 1px solid #eee; transition: 0.3s; }
+        .settings-modal.active { display: flex; }
+        .settings-modal h4 { margin: 0 0 15px 0; border-bottom: 2px solid var(--primary); padding-bottom: 8px; font-size: 1.1rem; color: var(--dark); }
+        .settings-modal label, .settings-modal .setting-item { font-size: 0.95rem; color: #333; display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 8px; border-bottom: 1px solid #f0f0f0; width: 100%; text-align: left; border-radius: 8px; transition: 0.2s; }
+        .settings-modal .setting-item:hover { background: #f5f5f5; border-radius: 5px; }
+        .settings-modal button { margin-top: 20px; padding: 12px; font-size: 1rem; width: 100%; border-radius: 10px; border: none; background: var(--dark); color: white; cursor: pointer; }
+        .settings-modal button:hover { background: #2c3e50; }
+        .dark-theme-active { background-color: #1a1a1a !important; color: #ffffff !important; }
+        .dark-theme-active .container, .dark-theme-active .card, .dark-theme-active .event-card, .dark-theme-active .journey-item { background-color: #2d2d2d !important; color: #fff !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; }
+        .dark-theme-active p, .dark-theme-active h1, .dark-theme-active h3 { color: #ecf0f1 !important; }
+        .app-version { font-size: 0.7rem; color: #999; text-align: center; margin-top: 10px; }
+        
         .nav-links a:hover { color: var(--primary); }
         
         .menu-icon { display: none; color: white; font-size: 1.5rem; cursor: pointer; }
@@ -268,8 +286,11 @@
             <img src="images_logo.jpeg" alt="Logo">
             LOC Ministries
         </a>
-        <div class="menu-icon" onclick="toggleMenu()">
-            <i class="fas fa-bars"></i>
+        <div style="display: flex; align-items: center;">
+            <div class="menu-icon" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <i class="fas fa-cog settings-icon" onclick="toggleSettings()" title="Settings"></i>
         </div>
         <div class="nav-links" id="navLinks">
             <a href="#home" onclick="toggleMenu()">Home</a>
@@ -284,6 +305,20 @@
             <a href="javascript:void(0)" id="installApp" style="display:none; color: #f1c40f; font-weight: bold;" onclick="installPWA()">Install App</a>
         </div>
     </nav>
+
+    <!-- Custom Settings Modal -->
+    <div class="settings-modal" id="settingsModal">
+        <h4><i class="fas fa-sliders-h"></i> ऐप सेटिंग्स</h4>
+        <label><i class="fas fa-moon"></i> डार्क मोड <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()" style="margin-left: auto; width: auto;"></label>
+        <div class="setting-item" onclick="document.getElementById('google_translate_element').scrollIntoView(); toggleSettings()"><i class="fas fa-language"></i> भाषा बदलें (Languages)</div>
+        <div class="setting-item" onclick="toggleSettings(); location.href='#terms'"><i class="fas fa-file-contract"></i> नियम और शर्तें (Terms)</div>
+        <div class="setting-item" onclick="toggleSettings(); location.href='#contact'"><i class="fas fa-shield-alt"></i> गोपनीयता नीति (Privacy)</div>
+        <div class="setting-item" onclick="location.reload()"><i class="fas fa-sync"></i> ऐप अपडेट करें</div>
+        <div class="setting-item" onclick="shareApp()"><i class="fas fa-share-alt"></i> ऐप शेयर करें</div>
+        <div class="setting-item" onclick="clearAppData()" style="color: #e74c3c;"><i class="fas fa-trash-alt"></i> डेटा साफ़ करें</div>
+        <div class="app-version">Version 1.0.10</div>
+        <button onclick="toggleSettings()">बंद करें</button>
+    </div>
 
     <div id="google_translate_element"></div> <!-- भाषा बदलने का विकल्प यहाँ दिखेगा -->
 
@@ -653,6 +688,48 @@
             const navLinks = document.getElementById('navLinks');
             navLinks.classList.toggle('active');
         }
+        
+        // Toggle Settings Modal
+        function toggleSettings() {
+            document.getElementById('settingsModal').classList.toggle('active');
+        }
+        
+        // Simple Dark Mode Logic
+        function toggleDarkMode() {
+            const isDark = document.getElementById('darkModeToggle').checked;
+            document.body.classList.toggle('dark-theme-active', isDark);
+            localStorage.setItem('darkMode', isDark);
+        }
+
+        // Function to apply theme on load
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('darkMode') === 'true';
+            document.getElementById('darkModeToggle').checked = savedTheme;
+            document.body.classList.toggle('dark-theme-active', savedTheme);
+        }
+
+        // Share App Function
+        async function shareApp() {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Labourers Of Christ Ministries',
+                        text: 'प्रभु के प्रेम और प्रार्थना के लिए हमारे ऐप से जुड़ें।',
+                        url: window.location.href
+                    });
+                } catch (err) { console.log('Share failed', err); }
+            } else {
+                alert("शेयर करने के लिए इस लिंक को कॉपी करें: " + window.location.href);
+            }
+        }
+
+        // Clear App Data
+        function clearAppData() {
+            if(confirm("क्या आप ऐप का डेटा साफ़ करना चाहते हैं? इससे आपकी सेव की गई जानकारी हट जाएगी।")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
 
         // Change Blessing Text
         function changeText() {
@@ -846,6 +923,7 @@
             if (typeof showSlides === 'function') showSlides();
 
             // Register PWA Service Worker
+            applySavedTheme();
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js')
                     .then(() => console.log('✅ App (Service Worker) Registered'))
