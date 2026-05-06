@@ -69,7 +69,7 @@
         .settings-icon:hover { color: var(--primary); }
         
         /* Settings Modal */
-        .settings-modal { display: none; position: fixed; top: 70px; right: 20px; background: white; width: 280px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 2000; padding: 20px; flex-direction: column; border: 1px solid #eee; transition: 0.3s; }
+        .settings-modal { display: none; position: fixed; top: 70px; right: 20px; background: white; width: 280px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 2000; padding: 20px; flex-direction: column; border: 1px solid #eee; transition: 0.3s; max-height: 85vh; overflow-y: auto; }
         .settings-modal.active { display: flex; }
         .settings-modal h4 { margin: 0 0 15px 0; border-bottom: 2px solid var(--primary); padding-bottom: 8px; font-size: 1.1rem; color: var(--dark); }
         .settings-modal label, .settings-modal .setting-item { font-size: 0.95rem; color: #333; display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 8px; border-bottom: 1px solid #f0f0f0; width: 100%; text-align: left; border-radius: 8px; transition: 0.2s; }
@@ -114,7 +114,11 @@
         p { color: #34495e; font-size: 1.1rem; line-height: 1.6; }
         button { padding: 12px 25px; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 25px; font-weight: bold; transition: 0.3s; margin-top: 20px; outline: none; }
         button:hover { background: var(--dark); transform: scale(1.05); }
-        #google_translate_element { padding: 10px; background: #eee; border-bottom: 1px solid #ddd; }
+        
+        /* Google Translate Styling inside Modal */
+        #google_translate_element { padding: 5px 0; width: 100%; }
+        .goog-te-gadget-simple { background-color: #f9f9f9 !important; border: 1px solid #eee !important; padding: 8px !important; border-radius: 8px !important; width: 100% !important; display: flex !important; justify-content: space-between !important; font-family: 'Poppins', sans-serif !important; }
+        .goog-te-menu-value span { color: #333 !important; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -310,17 +314,19 @@
     <div class="settings-modal" id="settingsModal">
         <h4><i class="fas fa-sliders-h"></i> ऐप सेटिंग्स</h4>
         <label><i class="fas fa-moon"></i> डार्क मोड <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()" style="margin-left: auto; width: auto;"></label>
-        <div class="setting-item" onclick="document.getElementById('google_translate_element').scrollIntoView(); toggleSettings()"><i class="fas fa-language"></i> भाषा बदलें (Languages)</div>
+        <!-- Google Translate integrated here -->
+        <div class="setting-item" style="flex-direction: column; align-items: flex-start; cursor: default;">
+            <span><i class="fas fa-language"></i> भाषा चुनें (Select Language)</span>
+            <div id="google_translate_element"></div>
+        </div>
         <div class="setting-item" onclick="toggleSettings(); location.href='#terms'"><i class="fas fa-file-contract"></i> नियम और शर्तें (Terms)</div>
-        <div class="setting-item" onclick="toggleSettings(); location.href='#contact'"><i class="fas fa-shield-alt"></i> गोपनीयता नीति (Privacy)</div>
+        <div class="setting-item" onclick="toggleSettings(); location.href='#privacy'"><i class="fas fa-shield-alt"></i> गोपनीयता नीति (Privacy)</div>
         <div class="setting-item" onclick="location.reload()"><i class="fas fa-sync"></i> ऐप अपडेट करें</div>
         <div class="setting-item" onclick="shareApp()"><i class="fas fa-share-alt"></i> ऐप शेयर करें</div>
         <div class="setting-item" onclick="clearAppData()" style="color: #e74c3c;"><i class="fas fa-trash-alt"></i> डेटा साफ़ करें</div>
         <div class="app-version">Version 1.0.10</div>
         <button onclick="toggleSettings()">बंद करें</button>
     </div>
-
-    <div id="google_translate_element"></div> <!-- भाषा बदलने का विकल्प यहाँ दिखेगा -->
 
     <div id="home" class="section">
         <div class="container">
@@ -645,6 +651,20 @@
                     <button type="button" onclick="sendViaGmail()" style="flex: 1; background: #ea4335;">Gmail से भेजें</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="privacy" class="section">
+        <h2>गोपनीयता नीति (Privacy Policy)</h2>
+        <div class="container terms-text">
+            <p>Labourers Of Christ Ministries में, हम आपकी गोपनीयता का सम्मान करते हैं। यह नीति बताती है कि हम आपकी जानकारी कैसे एकत्र और सुरक्षित करते हैं।</p>
+            <p><strong>1. जानकारी जो हम एकत्र करते हैं:</strong> जब आप प्रार्थना अनुरोध फॉर्म भरते हैं, तो हम आपका नाम, मोबाइल नंबर, ईमेल पता, घर का पता और आपका संदेश एकत्र करते हैं।</p>
+            <p><strong>2. जानकारी का उपयोग:</strong> आपकी जानकारी का उपयोग केवल आपसे संपर्क करने, आपके लिए प्रार्थना करने और मिनिस्ट्री से जुड़ी महत्वपूर्ण जानकारी साझा करने के लिए किया जाता है।</p>
+            <p><strong>3. डेटा की सुरक्षा और साझा करना:</strong> हम आपकी व्यक्तिगत जानकारी को किसी भी तीसरे पक्ष (Third Party) को विज्ञापन या मार्केटिंग के लिए नहीं बेचते और न ही साझा करते हैं। आपकी जानकारी हमारे पास पूरी तरह सुरक्षित है।</p>
+            <p><strong>4. तृतीय-पक्ष सेवा प्रदाता:</strong> हमारा ऐप <strong>Formspree</strong> (ईमेल भेजने के लिए), <strong>Google Translate</strong> (भाषा अनुवाद के लिए) और <strong>WhatsApp</strong> का उपयोग करता है। ये सेवाएं अपने स्वयं के नियमों के तहत डेटा संभालती हैं।</p>
+            <p><strong>5. यूज़र नियंत्रण:</strong> यदि आप चाहते हैं कि हम आपका डेटा अपने रिकॉर्ड से हटा दें, तो आप हमें कभी भी ईमेल कर सकते हैं।</p>
+            <p><strong>6. सहमति:</strong> इस ऐप का उपयोग करके, आप इस गोपनीयता नीति की शर्तों से सहमत होते हैं।</p>
+            <p style="margin-top:20px;">यदि आपके कोई प्रश्न हैं, तो कृपया हमसे संपर्क करें: <a href="mailto:anupawara316@gmail.com">anupawara316@gmail.com</a></p>
         </div>
     </div>
 
