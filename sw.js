@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loc-ministries-v5';
+const CACHE_NAME = 'loc-ministries-v6';
 const urlsToCache = [
   './',
   './index.html',
@@ -37,8 +37,14 @@ self.addEventListener('activate', event => {
 // Fetch: इंटरनेट न होने पर कैशे से फाइल देना
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+    caches.match(event.request)
+      .then(response => {
+        // अगर कैशे में फाइल है तो उसे दें, वरना नेटवर्क से लाएं
+        return response || fetch(event.request);
+      })
+      .catch(() => {
+        // अगर नेटवर्क फेल हो जाए और फाइल कैशे में न हो, तो कम से कम index.html दिखाएं
+        return caches.match('./index.html');
+      })
   );
 });
