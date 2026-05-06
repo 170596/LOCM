@@ -605,7 +605,10 @@
                 <input type="text" name="state" placeholder="राज्य (State)" required>
                 <input type="text" name="pincode" placeholder="पिन कोड (Pin Code)" required>
                 <textarea name="request" rows="5" placeholder="आपकी प्रार्थना या अनुरोध (Request)" required></textarea>
-                <button type="submit">संदेश भेजें</button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button type="submit" style="flex: 1;">WhatsApp पर भेजें</button>
+                    <button type="button" onclick="sendViaGmail()" style="flex: 1; background: #ea4335;">Gmail से भेजें</button>
+                </div>
             </form>
         </div>
     </div>
@@ -663,6 +666,21 @@
             const randomIndex = Math.floor(Math.random() * blessings.length);
             const messageEl = document.getElementById('message');
             if (messageEl) messageEl.innerText = blessings[randomIndex];
+        }
+
+        // Gmail logic for direct app opening
+        function sendViaGmail() {
+            const form = document.getElementById('prayerForm');
+            const name = form.name.value;
+            const request = form.request.value;
+            const phone = form.phone.value;
+            const address = form.address.value;
+            
+            if(!name || !request) { alert("कृपया नाम और अनुरोध भरें"); return; }
+            
+            const subject = encodeURIComponent("New Prayer Request from " + name);
+            const body = encodeURIComponent(`Name: ${name}\nPhone: ${phone}\nAddress: ${address}\n\nRequest:\n${request}`);
+            window.location.href = `mailto:anupawara316@gmail.com?subject=${subject}&body=${body}`;
         }
 
         // Daily Bible Verse Logic
@@ -864,11 +882,17 @@
             event.preventDefault();
             const formData = new FormData(this);
             const name = formData.get('name');
+            const address = formData.get('address');
             const phone = formData.get('phone');
+            const email = formData.get('email');
+            const state = formData.get('state');
+            const pincode = formData.get('pincode');
             const request = formData.get('request');
 
-            // WhatsApp Message
-            const whatsappMessage = encodeURIComponent(`*New Prayer Request*\nName: ${name}\nPhone: ${phone}\nRequest: ${request}`);
+            // WhatsApp Message with complete info
+            const fullMessage = `*New Prayer Request*\n\n*Name:* ${name}\n*Address:* ${address}\n*Phone:* ${phone}\n*Email:* ${email}\n*State:* ${state}\n*Pin:* ${pincode}\n\n*Request:* ${request}`;
+            const whatsappMessage = encodeURIComponent(fullMessage);
+            
             window.open(`https://wa.me/919370784392?text=${whatsappMessage}`, '_blank');
 
             // Email submission

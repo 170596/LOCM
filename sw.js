@@ -1,8 +1,9 @@
-const CACHE_NAME = 'loc-ministries-v6';
+const CACHE_NAME = 'loc-ministries-v8'; // अपडेटेड वर्शन
 const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
+  './images_logo.png',
   './images_logo.jpeg',
   './images_qr_code.jpeg',
   'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
@@ -42,12 +43,12 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // अगर कैशे में फाइल है तो उसे दें, वरना नेटवर्क से लाएं
-        return response || fetch(event.request);
-      })
-      .catch(() => {
-        // अगर नेटवर्क फेल हो जाए और फाइल कैशे में न हो, तो कम से कम index.html दिखाएं
-        // Fallback to index.html for navigation requests
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      }).catch(() => {
+        // जब इंटरनेट न हो और फाइल कैशे में भी न हो
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }
