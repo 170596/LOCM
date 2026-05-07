@@ -294,7 +294,7 @@
             <div class="menu-icon" onclick="toggleMenu()">
                 <i class="fas fa-bars"></i>
             </div>
-            <i class="fas fa-cog settings-icon" onclick="toggleSettings()" title="Settings"></i>
+            <i class="fas fa-cog settings-icon" onclick="toggleSettings()" title="Settings" aria-label="Settings Menu"></i>
         </div>
         <div class="nav-links" id="navLinks">
             <a href="#home" onclick="toggleMenu()">Home</a>
@@ -343,10 +343,10 @@
     <div id="journey" class="section">
         <h2>हमारी यात्रा (Our Journey)</h2>
         <div class="journey-grid">
-            <!-- 2012 Milestone -->
+            <!-- 2005 Milestone -->
             <div class="journey-item">
                 <div class="journey-content">
-                    <h3>2012: शुरुआत (The Beginning)</h3>
+                    <h3>2005: शुरुआत (The Beginning)</h3>
                     <span class="vachan-text">"तेरा आरम्भ चाहे छोटा रहा हो, परन्तु तेरा अन्त बहुत महान होगा।" - अय्यूब 8:7</span>
                     <p>एक छोटे से विश्वास और प्रार्थना के साथ हमने मसीह की सेवा का यह सफर शुरू किया।</p>
                 </div>
@@ -404,7 +404,7 @@
                     आपका ब्राउज़र वीडियो टैग का समर्थन नहीं करता है।
                 </video>
             </div>
-            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">ऊपर वाला वीडियो आपकी गैलरी से है। नीचे YouTube चैनल देखें:</p>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">ऊपर वाला वीडियो गैलरी से है। नीचे YouTube चैनल देखें:</p>
             <a href="https://www.youtube.com/@labourersofchristministries" target="_blank" rel="noopener noreferrer" style="text-decoration: none;"><button style="background: #ff0000; margin-top: 5px;"><i class="fab fa-youtube"></i> चैनल को सब्सक्राइब करें</button></a>
         </div>
     </div>
@@ -557,7 +557,7 @@
                 <p>A: हमारी सभाएँ मुख्य रूप से हिंदी और स्थानीय भाषा में होती हैं।</p>
             </div>
             <div class="faq-item">
-                <strong>Q: क्या मैं इस मंत्रालय में वालंटियर बन सकता हूँ?</strong>
+                <strong>Q: क्या मैं इस मिनिस्ट्री में वालंटियर बन सकता हूँ?</strong>
                 <p>A: जी हाँ, हम हमेशा सेवा के लिए तैयार हाथों का स्वागत करते हैं। कृपया हमसे संपर्क करें।</p>
             </div>
         </div>
@@ -579,7 +579,13 @@
     <div class="chat-widget">
         <button class="chat-button" onclick="toggleChat()" aria-label="Open Chat"><i class="fas fa-robot"></i></button>
         <div class="chat-window" id="chatWindow">
-            <div class="chat-header">LOC Assistant <span onclick="toggleChat()" style="cursor:pointer;">&times;</span></div>
+            <div class="chat-header">
+                <span><i class="fas fa-robot"></i> LOC Assistant</span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <i class="fas fa-trash-alt" onclick="clearChat()" style="cursor:pointer; font-size: 0.8rem;" title="Clear Chat"></i>
+                    <span onclick="toggleChat()" style="cursor:pointer;">&times;</span>
+                </div>
+            </div>
             <div class="chat-messages" id="chatMessages">
                 <p><strong>LOC Bot:</strong> नमस्ते! मैं आपकी कैसे मदद कर सकता हूँ?</p>
             </div>
@@ -605,8 +611,8 @@
             <img src="images_qr_code.jpeg" alt="Donation QR Code" class="qr-code" style="cursor: pointer; border: 2px solid #eee; padding: 10px;" onclick="openLightbox(this.src)">
             <p><strong>Scan QR Code to Donate</strong></p>
 
-            <!-- पेमेंट बटन (Added cu=INR for better validation) -->
-            <a href="upi://pay?pa=50200076072647@hdfcbank&pn=LOC%20Ministries&cu=INR" class="upi-pay-btn">
+            <!-- पेमेंट बटन: URI Encoding को और सरल बनाया गया है ताकि सभी ऐप्स इसे समझ सकें -->
+            <a href="upi://pay?pa=50200076072647@hdfcbank&pn=Labourers%20Of%20Christ&tn=LOC%20Donation&cu=INR" class="upi-pay-btn" id="upiBtn">
                 <i class="fas fa-mobile-alt"></i> सीधे UPI से भुगतान करें
             </a>
 
@@ -879,57 +885,78 @@
             const userText = input.value.trim().toLowerCase();
             if (userText === "") return;
 
-            messages.innerHTML += `<p style="text-align:right;"><strong>You:</strong> ${input.value}</p>`;
+            messages.insertAdjacentHTML('beforeend', `<p style="text-align:right;"><strong>You:</strong> ${input.value}</p>`);
             input.value = "";
 
-            // Auto-fetch data from the website content
-            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).innerText : "उपलब्ध नहीं";
-            const siteData = {
-                address: getVal('ministryAddress'),
-                phone: getVal('ministryPhone'),
-                email: getVal('ministryEmail'),
+            // टाइपिंग इंडिकेटर (Typing Indicator)
+            const typingId = 'typing-' + Date.now();
+            messages.insertAdjacentHTML('beforeend', `<p id="${typingId}"><em>LOC Bot टाइप कर रहा है...</em></p>`);
+            messages.scrollTop = messages.scrollHeight;
+
+            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).innerText.trim() : "";
+            
+            // वेबसाइट के विभिन्न हिस्सों से डेटा इकट्ठा करना (Context Gathering)
+            const siteContext = {
+                mission: getVal('mission').replace("हमारा लक्ष्य (Our Mission)", ""),
+                journey: getVal('journey').replace("हमारी यात्रा (Our Journey)", ""),
+                contact: {
+                    email: getVal('ministryEmail'),
+                    phone: getVal('ministryPhone'),
+                    address: getVal('ministryAddress')
+                },
                 bank: getVal('bankDetails'),
-                leaders: Array.from(document.querySelectorAll('#leaders .card h3')).map(h => h.innerText).join(", ") || "Our Leaders",
-                events: Array.from(document.querySelectorAll('.event-card strong')).map(e => e.innerText).join(" और ") || "Worship Services"
+                leaders: Array.from(document.querySelectorAll('#leaders .card h3')).map(h => h.innerText),
+                events: Array.from(document.querySelectorAll('.event-card')).map(e => {
+                    const title = e.querySelector('strong') ? e.querySelector('strong').innerText : "";
+                    const date = e.querySelector('.event-date') ? e.querySelector('.event-date').innerText : "";
+                    return `${title} (${date})`;
+                })
             };
 
-            let response = "क्षमा करें, इस बारे में अधिक जानकारी के लिए आप हमें " + siteData.phone + " पर संपर्क कर सकते हैं।";
+            const responseMap = {
+                "hi": "नमस्ते! मैं LOC का स्मार्ट सहायक हूँ। मैं आपको हमारी मिनिस्ट्री, यात्रा या कार्यक्रमों के बारे में बता सकता हूँ।",
+                "hello": "प्रणाम! मैं आपकी क्या सहायता कर सकता हूँ?",
+                "नमस्ते": "नमस्ते! प्रभु आपको आशीष दे। मैं आपकी क्या मदद करूँ?",
+                "दान": "आप बैंक या UPI से दान दे सकते हैं। विवरण: " + siteContext.bank,
+                "donation": "You can support us via Bank or UPI. Details: " + siteContext.bank,
+                "प्रार्थना": "हम आपके लिए प्रार्थना करेंगे। कृपया नीचे फॉर्म भरें या " + siteContext.contact.phone + " पर व्हाट्सएप करें।",
+                "पता": "हमारा पता: " + siteContext.contact.address,
+                "address": "Our address: " + siteContext.contact.address,
+                "समय": "सभा का समय: " + siteContext.events.join(", "),
+                "time": "Upcoming events: " + siteContext.events.join(", "),
+                "वचन": "आज का वचन है: " + document.getElementById('dailyVerse').innerText,
+                "संपर्क": "ईमेल: " + siteContext.contact.email + " | फोन: " + siteContext.contact.phone,
+                "लीडर": "हमारे मार्गदर्शक: " + siteContext.leaders.join(", "),
+                "founder": "Our leaders: " + siteContext.leaders.join(", "),
+                "धन्यवाद": "आपका स्वागत है! ईश्वर आपको आशीष दे।"
+            };
 
-            // Greeting logic
-            if (userText.includes("hi") || userText.includes("hello") || userText.includes("नमस्ते") || userText.includes("hey")) {
-                response = "नमस्ते! मैं 'Labourers Of Christ' का डिजिटल सहायक हूँ। मैं आपकी प्रार्थना अनुरोध, दान या मिनिस्ट्री की जानकारी में मदद कर सकता हूँ। आप क्या जानना चाहेंगे?";
-            } else if (userText.includes("दान") || userText.includes("donation")) {
-                response = "आप बैंक या UPI के माध्यम से दान दे सकते हैं। विवरण इस प्रकार है: " + siteData.bank;
-            } else if (userText.includes("प्रार्थना") || userText.includes("prayer")) {
-                response = "हम आपके लिए प्रार्थना करना चाहेंगे। कृपया नीचे दिए गए 'Contact' फॉर्म को भरें या हमें " + siteData.phone + " पर कॉल करें।";
-            } else if (userText.includes("मिशन") || userText.includes("mission")) {
-                response = "हमारा मिशन सुसमाचार का प्रचार करना और जरूरतमंदों की सेवा करना है।";
-            } else if (userText.includes("पता") || userText.includes("address") || userText.includes("location") || userText.includes("कहाँ")) {
-                response = "हमारा पता है: " + siteData.address;
-            } else if (userText.includes("वचन") || userText.includes("verse") || userText.includes("bible")) {
-                response = "आज का मुख्य वचन है: " + document.getElementById('dailyVerse').innerText + ". परमेश्वर आपको आशीष दे।";
-            } else if (userText.includes("समय") || userText.includes("time") || userText.includes("कब") || userText.includes("sunday")) {
-                response = "हमारी मुख्य सभाएं: " + siteData.events;
-            } else if (userText.includes("नंबर") || userText.includes("phone") || userText.includes("संपर्क") || userText.includes("contact")) {
-                response = "आप हमें " + siteData.phone + " पर कॉल कर सकते हैं या " + siteData.email + " पर ईमेल कर सकते हैं।";
-            } else if (userText.includes("लीडर") || userText.includes("founder") || userText.includes("मार्गदर्शक") || userText.includes("नाम")) {
-                response = "हमारे मुख्य मार्गदर्शक " + siteData.leaders + " हैं।";
-            } else if (userText.includes("social") || userText.includes("facebook") || userText.includes("youtube") || userText.includes("instagram")) {
-                response = "आप हमें Facebook, Instagram और YouTube पर फॉलो कर सकते हैं। लिंक पेज के नीचे (Footer) दिए गए हैं।";
-            } else if (userText.includes("वीडियो") || userText.includes("video") || userText.includes("youtube")) {
-                response = "आप हमारे विशेष संदेश 'Videos' सेक्शन में देख सकते हैं।";
-            } else if (userText.includes("सवाल") || userText.includes("faq") || userText.includes("volunteer")) {
-                response = "आप हमारे FAQ सेक्शन में सामान्य सवालों के जवाब देख सकते हैं या वालंटियर बनने के लिए हमसे संपर्क कर सकते हैं।";
-            } else if (userText.includes("धन्यवाद") || userText.includes("thanks") || userText.includes("shukriya")) {
-                response = "आपका स्वागत है! ईश्वर आपको आशीष दे। क्या मैं आपकी कुछ और मदद कर सकता हूँ?";
-            } else if (userText.includes("काम") || userText.includes("work") || userText.includes("सेवा")) {
-                response = "हम प्रार्थना सभाओं, भोजन वितरण और शिक्षा के माध्यम से समाज की सेवा करते हैं। अधिक जानकारी के लिए 'Journey' सेक्शन देखें।";
+            let response = "";
+            
+            for (let key in responseMap) {
+                if (userText.includes(key)) {
+                    response = responseMap[key];
+                    break;
+                }
+            }
+
+            // अगर कोई कीवर्ड मैच नहीं हुआ, तो वेबसाइट के कंटेंट में सर्च करें
+            if (!response) {
+                if (userText.includes("लक्ष्य") || userText.includes("मिशन") || userText.includes("mission")) {
+                    response = siteContext.mission;
+                } else if (userText.includes("यात्रा") || userText.includes("history") || userText.includes("journey")) {
+                    response = siteContext.journey.substring(0, 300) + "... (पूरी जानकारी के लिए 'Journey' सेक्शन देखें)";
+                } else {
+                    response = "क्षमा करें, मुझे इस बारे में सटीक जानकारी नहीं मिली। आप हमारे मुख्य मार्गदर्शक " + siteContext.leaders[0] + " से " + siteContext.contact.phone + " पर संपर्क कर सकते हैं।";
+                }
             }
 
             setTimeout(() => {
-                messages.innerHTML += `<p><strong>LOC Bot:</strong> ${response}</p>`;
+                const typingElem = document.getElementById(typingId);
+                if (typingElem) typingElem.remove(); // टाइपिंग हटाएँ
+                messages.insertAdjacentHTML('beforeend', `<p><strong>LOC Bot:</strong> ${response}</p>`);
                 messages.scrollTop = messages.scrollHeight;
-            }, 500);
+            }, 800); // थोड़ा डिले ताकि AI जैसा महसूस हो
         }
 
         // Initialization logic
@@ -1054,6 +1081,16 @@
             slideIndex++;
             showSlides();
         }, 5000);
+
+        // UPI Button Desktop Check
+        document.getElementById('upiBtn').addEventListener('click', function(e) {
+            // यह चेक करता है कि कहीं यूज़र कंप्यूटर पर तो नहीं है
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            if (!isMobile && !window.matchMedia("(max-width: 768px)").matches) {
+                e.preventDefault();
+                alert("यह 'Direct Pay' बटन केवल मोबाइल UPI ऐप्स (GPay, PhonePe) पर काम करता है। कृपया मोबाइल से प्रयास करें या QR कोड स्कैन करें।");
+            }
+        });
     </script>
 </body>
 </html>

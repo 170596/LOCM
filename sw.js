@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loc-ministries-v10'; // नया वर्शन
+const CACHE_NAME = 'loc-ministries-v11'; 
 const urlsToCache = [
   './',
   './index.html',
@@ -35,20 +35,20 @@ self.addEventListener('activate', event => {
   )
 });
 
-// Fetch: इंटरनेट न होने पर कैशे से फाइल देना
-// Fetch: Serve from cache, fallback to network
 self.addEventListener('fetch', event => {
-  // Skip cross-origin requests like Google Fonts if needed, 
-  // or handle them specifically. Here we try cache first.
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
+        return response || fetch(event.request).then(fetchRes => {
+          return caches.open(CACHE_NAME).then(cache => {
+            // Dynamic caching: केवल GET रिक्वेस्ट को ही कैशे करें (फॉर्म सबमिशन POST को नहीं)
+            if (event.request.method === 'GET' && event.request.url.startsWith('http')) {
+                cache.put(event.request.url, fetchRes.clone());
+            }
+            return fetchRes;
+          });
+        });
       }).catch(() => {
-        // जब इंटरनेट न हो और फाइल कैशे में भी न हो
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }
