@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loc-ministries-v18'; 
+const CACHE_NAME = 'loc-ministries-v21'; 
 const urlsToCache = [
   './',
   './index.html',
@@ -54,4 +54,11 @@ self.addEventListener('fetch', event => {
         }
       })
   );
+});
+
+// Listen for messages from the page to skip waiting and activate immediately
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

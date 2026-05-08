@@ -322,10 +322,10 @@
         <div class="setting-item" style="flex-direction: column; align-items: flex-start; cursor: default;">
             <span><i class="fas fa-language"></i> भाषा चुनें (Select Language)</span>
             <div id="google_translate_element"></div>
-        </div>
+        </div> 
         <div class="setting-item" onclick="toggleSettings(); location.href='#terms'"><i class="fas fa-file-contract"></i> नियम और शर्तें (Terms)</div>
         <div class="setting-item" onclick="toggleSettings(); location.href='#privacy'"><i class="fas fa-shield-alt"></i> गोपनीयता नीति (Privacy)</div>
-        <div class="setting-item" onclick="location.reload()"><i class="fas fa-sync"></i> ऐप अपडेट करें</div>
+        <div class="setting-item" onclick="checkForUpdatesAndReload()"><i class="fas fa-sync"></i> ऐप अपडेट करें</div>
         <div class="setting-item" onclick="shareApp()"><i class="fas fa-share-alt"></i> ऐप शेयर करें</div>
         <div class="setting-item" onclick="clearAppData()" style="color: #e74c3c;"><i class="fas fa-trash-alt"></i> डेटा साफ़ करें</div>
         <div class="app-version">Version 1.0.10</div>
@@ -616,9 +616,10 @@
             <p><strong>Scan QR Code to Donate</strong></p>
 
             <!-- पेमेंट बटन: URI Encoding को और सरल बनाया गया है ताकि सभी ऐप्स इसे समझ सकें -->
-            <a href="upi://pay?pa=50200076072647@hdfcbank&pn=Labourers%20Of%20Christ&tn=LOC%20Donation&cu=INR" class="upi-pay-btn" id="upiBtn">
+            <a href="upi://pay?pa=50200076072647@hdfcbank&pn=Labourers%20Of%20Christ&tn=Donation&cu=INR" class="upi-pay-btn" id="upiBtn">
                 <i class="fas fa-mobile-alt"></i> सीधे UPI से भुगतान करें
             </a>
+            <p id="upiHint" style="display:none; color: #e67e22; font-size: 0.85rem; margin-top: 10px; font-weight: 500;">⚠️ यदि UPI ऐप नहीं खुल रहा है, तो कृपया ऊपर दिए गए तीन डॉट्स (⋮) पर क्लिक करें और 'Open in Chrome' चुनें।</p>
 
             <div style="margin-top: 15px;">
                 <p style="font-size: 0.9rem; margin-bottom: 5px;">यदि बटन काम न करे, तो ID कॉपी करें:</p>
@@ -964,6 +965,56 @@
         }
 
         // Initialization logic
+        // Function to check for and apply updates
+        async function checkForUpdatesAndReload() {
+            toggleSettings(); // Close settings modal
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        console.log('Checking for service worker updates...');
+                        // Manually check for updates
+                        await registration.update(); 
+
+                        if (registration.waiting) {
+                            // A new service worker is installed and waiting
+                            console.log('New service worker found and waiting. Activating...');
+                            if (confirm('नया अपडेट उपलब्ध है! क्या आप ऐप को अपडेट करना चाहेंगे?')) {
+                                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                                // Wait for the new service worker to activate
+                                await new Promise(resolve => {
+                                    registration.waiting.addEventListener('statechange', e => {
+                                        if (e.target.state === 'activated') {
+                                            resolve();
+                                        }
+                                    });
+                                });
+                                alert('ऐप अपडेट हो गया है! पेज रीलोड हो रहा है।');
+                                location.reload();
+                            } else {
+                                alert('अपडेट रद्द कर दिया गया है।');
+                            }
+                        } else {
+                            console.log('No new service worker waiting. Reloading to ensure latest version.');
+                            alert('ऐप नवीनतम संस्करण पर है या अपडेट हो रहा है। पेज रीलोड हो रहा है।');
+                            location.reload();
+                        }
+                    } else {
+                        console.log('No service worker registered. Reloading.');
+                        alert('ऐप नवीनतम संस्करण पर है। पेज रीलोड हो रहा है।');
+                        location.reload();
+                    }
+                } catch (error) {
+                    console.error('Service Worker update failed:', error);
+                    alert('अपडेट करने में समस्या हुई। कृपया बाद में पुनः प्रयास करें।');
+                    location.reload(); // Still reload as a fallback
+                }
+            } else {
+                alert('आपका ब्राउज़र सर्विस वर्कर का समर्थन नहीं करता है। पेज रीलोड हो रहा है।');
+                location.reload();
+            }
+        }
+
         function init() {
             // Set Verse
             const randomIndex = Math.floor(Math.random() * verses.length);
@@ -976,9 +1027,30 @@
             // Register PWA Service Worker
             applySavedTheme();
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log('✅ App (Service Worker) Registered'))
+                navigator.serviceWorker.register('sw.js', { scope: './' }) // Ensure scope is defined
+                    .then(reg => {
+                        console.log('✅ App (Service Worker) Registered', reg);
+                        reg.addEventListener('updatefound', () => {
+                            const installingWorker = reg.installing;
+                            if (installingWorker) {
+                                installingWorker.addEventListener('statechange', () => {
+                                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        console.log('New content available, waiting for activation.');
+                                        // Optionally, show a passive "New update available" banner here
+                                    }
+                                });
+                            }
+                        });
+                    })
                     .catch(err => console.log('❌ App Registration Failed', err));
+
+                // Listen for messages from the service worker (for SKIP_WAITING)
+                navigator.serviceWorker.addEventListener('message', event => {
+                    if (event.data && event.data.type === 'RELOAD_PAGE') { // This type is not used in current sw.js, but good to keep if needed
+                        console.log('Service Worker requested page reload.');
+                        location.reload();
+                    }
+                });
             }
         }
 
@@ -1088,9 +1160,14 @@
 
         // UPI Button Desktop Check
         document.getElementById('upiBtn').addEventListener('click', function(e) {
-            // यह चेक करता है कि कहीं यूज़र कंप्यूटर पर तो नहीं है
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            if (!isMobile && !window.matchMedia("(max-width: 768px)").matches) {
+            const isInApp = /FBAN|FBAV|Instagram|WhatsApp|Line|wv/i.test(navigator.userAgent);
+
+            if (isInApp) {
+                document.getElementById('upiHint').style.display = 'block';
+            }
+
+            if (!isMobile && window.innerWidth > 768) {
                 e.preventDefault();
                 alert("यह 'Direct Pay' बटन केवल मोबाइल UPI ऐप्स (GPay, PhonePe) पर काम करता है। कृपया मोबाइल से प्रयास करें या QR कोड स्कैन करें।");
             }
