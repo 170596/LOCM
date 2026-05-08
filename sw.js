@@ -1,4 +1,4 @@
-const CACHE_NAME = 'loc-ministries-v17'; 
+const CACHE_NAME = 'loc-ministries-v18'; 
 const urlsToCache = [
   './',
   './index.html',
